@@ -15,3 +15,17 @@ The system publishes fan duty, RPM, and temperature readings over MQTT, allowing
 [Fritzing schematic file](schematics/schematics.fzz)
 
 [<img src="images/schematics.png" width="200"/>](images/schematics.png)
+
+# Parts list
+*1× ESP32 controller
+*1× 12V PWM fan (additional fans can be chained if they have compatible connectors)
+*6× 10kΩ NTC thermistor temperature sensors
+*7× 10kΩ resistors
+*1× 2kΩ resistor
+*1× 1kΩ resistor
+*1× 0.1 nF ceramic capacitor
+*1× 4-pin male fan connector
+*1× 4-pin male power supply connector (3-pin could also be used)
+*2× 18×24 hole prototyping PCB boards
+*1× SATA to Molex power adapter (Molex connector removed and wired directly to PCB power input)
+*24 AWG wire
