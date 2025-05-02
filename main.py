@@ -4,7 +4,7 @@ import network
 import uasyncio
 import ujson
 import math
-from umqtt.simple import MQTTClient # Make sure to install umqtt.simple external library
+from umqtt.simple import MQTTClient
 from utime import sleep
 from machine import ADC, Pin, PWM
 import secrets
@@ -17,17 +17,18 @@ V_SUPPLY = 5.0  # Supply voltage (5V for ESP32)
 DELTA_C = 0 # Temperature measurement correction
 THERMISTOR_PINS = [32, 33, 34, 35, 36, 39]  # List of thermistor ADC pins
 SETTINGS = {    # PWM Duty depending on max temperature
-    0:  20,
-    10: 30,
-    20: 38,
-    30: 40,
-    40: 42,
-    50: 44,
+    0:  30,
+    10: 34,
+    15: 38,
+    20: 42,
+    30: 43,
+    40: 44,
+    50: 45,
     60: 46,
-    70: 48,
-    80: 50,
-    90: 51,
-    100: 52
+    70: 47,
+    80: 48,
+    90: 49,
+    100: 50
 }
 # endregion
 
@@ -35,7 +36,7 @@ SETTINGS = {    # PWM Duty depending on max temperature
 fan = PWM(Pin(5))  # Fan PWM control
 thermistor_temps = {}  # To store temperatures for each pin
 temp_C_max = 40  # Initial max temperature
-duty = 10  # Initial duty cycle
+duty = 33.3  # Initial duty cycle
 RPM_PIN = 23  # Change if using a different GPIO pin
 pulse_count = 0 # Initial pulse count 
 rpm = 0 # Initial rpm count
@@ -46,7 +47,7 @@ thermistors = [ADC(Pin(pin, Pin.IN)) for pin in THERMISTOR_PINS]
 for t in thermistors:
     t.atten(ADC.ATTN_11DB)  # Set attenuation for full range (0-3.3V)
 # Initialize fan
-fan.duty(duty * 1023 // 100)  # Initial duty cycle
+fan.duty(int(duty) * 1023 // 100)  # Initial duty cycle
 # Initialize pin with pull-up resistor manually
 rpm_sensor = Pin(RPM_PIN, Pin.IN, pull=Pin.PULL_UP)
 
@@ -58,18 +59,23 @@ rpm_sensor = Pin(RPM_PIN, Pin.IN, pull=Pin.PULL_UP)
 def set_duty(temp):
     global duty, SETTINGS
     if temp < SETTINGS[0]:
-        duty = 0
+        newduty = 0
     elif temp > SETTINGS[100]:
-        duty = 100
+        newduty = 100
     else:
         items = sorted(SETTINGS.items(), key=lambda item: item[1])
         for i in range(len(items) - 1):
             duty_low, temp_low = items[i]
             duty_upp, temp_upp = items[i + 1]
             if temp_low <= temp <= temp_upp:
-                duty = round(duty_low + (temp - temp_low) * (duty_upp - duty_low) / (temp_upp - temp_low))
-    
-    fan.duty(duty * 1023 // 100)
+                newduty = (duty_low + (temp - temp_low) * (duty_upp - duty_low) / (temp_upp - temp_low))
+    if newduty < duty:
+        duty = duty - 0.1
+        if duty < 0:
+            duty = 0
+    else:
+        duty = newduty
+    fan.duty(int(duty) * 1023 // 100)
     print(f">>> Max temp: {temp}C, setting duty to: {duty}%")
 def fan_control():
     set_duty(temp_C_max)
