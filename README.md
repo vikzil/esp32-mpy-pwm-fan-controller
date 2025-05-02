@@ -1,5 +1,8 @@
 # esp32-mpy-pwm-fan-controller
-MQTT-Enabled PWM Fan Controller with Thermistors and MicroPython on ESP32 
+MQTT-Enabled PWM Fan Controller with Thermistors and MicroPython on ESP32
+
+# Status 
+🚧 Work in progress – the project is currently being populated...
 
 # Background
 The purpose of this repository is to document, share, and hopefully polish over time an ESP32-based MicroPython PWM fan controller using thermistors. I created this project to monitor the temperatures of up to six hard drives in my DIY NAS.
@@ -8,5 +11,7 @@ In most PCs, fans are controlled based on CPU or GPU temperatures, but that’s 
 
 The system publishes fan duty, RPM, and temperature readings over MQTT, allowing integration with platforms like Home Assistant for monitoring and automation.
 
-# Status 
-🚧 Work in progress – the project is currently being populated...
+# Schematics
+[Fritzing schematic file](schematics/schematics.fzz)
+
+[<img src="images/schematics.png" width="200"/>](images/schematics.png)
