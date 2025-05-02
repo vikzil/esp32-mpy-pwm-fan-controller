@@ -1,9 +1,6 @@
 # esp32-mpy-pwm-fan-controller
 MQTT-Enabled PWM Fan Controller with Thermistors and MicroPython on ESP32
 
-# Status 
-🚧 Work in progress – the project is currently being populated...
-
 # Disclamer
 I am a hobbyist and not a professional when it comes to electronics or programming. While I try to ensure accuracy, there may be mistakes or suboptimal choices in my work. Please use this as a learning resource, and feel free to offer corrections or suggestions for improvement!
 
