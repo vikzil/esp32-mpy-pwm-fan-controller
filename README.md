@@ -32,3 +32,4 @@ The system publishes fan duty, RPM, and temperature readings over MQTT, allowing
 * 2× 18×24 hole prototyping PCB boards
 * 1× SATA to Molex power adapter (Molex connector removed and wired directly to PCB power input)
 * 24 AWG wire
+* 1x aluminium tape (I believe it helps with heat transfer between hdd and sensor)
