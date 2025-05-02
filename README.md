@@ -33,3 +33,6 @@ The system publishes fan duty, RPM, and temperature readings over MQTT, allowing
 * 1× SATA to Molex power adapter (Molex connector removed and wired directly to PCB power input)
 * 24 AWG wire
 * 1x aluminium tape (I believe it helps with heat transfer between hdd and sensor)
+
+Comments:
+A casing would be useful to facilitate handling the fully assembled project and prevent accidental shorts. I used an old external HDD casing, which I filled with construction adhesive and glued the assembled PCBs into it. After that, I waited a couple of weeks to ensure the adhesive had fully dried. I had to cut one edge of the casing to connect a USB cable to the ESP32 for testing, which would have been easier to do before assembling the project. For attaching the sensors, I used approximately 1m-long wires to ensure the sensors could reach anywhere in the PC case. With six sensors, however, the wires became quite a mess. It might have been smarter to use thinner wires and add connectors to the PCB, so sensors not in use could be easily detached.
