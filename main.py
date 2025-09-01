@@ -46,9 +46,11 @@ rpm = 0 # Initial rpm count
 thermistors = [ADC(Pin(pin, Pin.IN)) for pin in THERMISTOR_PINS]
 for t in thermistors:
     t.atten(ADC.ATTN_11DB)  # Set attenuation for full range (0-3.3V)
+
 # Initialize fan
 fan.duty(int(duty) * 1023 // 100)  # Initial duty cycle
-# Initialize pin with pull-up resistor manually
+
+# Initialize rpm pin with pull-up resistor manually
 rpm_sensor = Pin(RPM_PIN, Pin.IN, pull=Pin.PULL_UP)
 
 
@@ -76,7 +78,7 @@ def set_duty(temp):
     else:
         duty = newduty
     fan.duty(int(duty) * 1023 // 100)
-    print(f">>> Max temp: {temp}C, setting duty to: {duty}%")
+    print(f">>> Max temp: {temp}°C, setting duty to: {duty}%")
 def fan_control():
     set_duty(temp_C_max)
     gc.collect()
@@ -174,10 +176,9 @@ async def mqtt_publish():
                 discovery_payload = {
                     "name": f"Truenas tnas_fan_rpm sensor",
                     "state_topic": f"homeassistant/sensor/tnas_fan_rpm/freq",
-                    "unit_of_measurement": "rpm",
-                    "device_class": "frequency",
                     "unique_id": f"tnas_fan_rpm",
-                    "expire_after": 60
+                    "expire_after": 60,
+                    "state_class": "measurement"
                 }
                 discovery_message = ujson.dumps(discovery_payload)
                 mqtt_client.publish(discovery_topic, discovery_message)
@@ -194,7 +195,7 @@ async def mqtt_publish():
                     "name": f"Truenas tnas_fan_duty sensor",
                     "state_topic": f"homeassistant/sensor/tnas_fan_duty/pwr",
                     "unit_of_measurement": "%",
-                    "device_class": "power",
+                    "device_class": "power_factor",
                     "unique_id": f"tnas_fan_duty",
                     "expire_after": 60
                 }
@@ -210,15 +211,15 @@ async def mqtt_publish():
                     discovery_payload = {
                         "name": f"Truenas pin{key} sensor",
                         "state_topic": f"homeassistant/sensor/tnas_pin{key}/temp",
-                        "unit_of_measurement": "C",
+                        "unit_of_measurement": "\u00B0C",  # safer than literal "°C"
                         "device_class": "temperature",
                         "unique_id": f"tnas_pin{key}_temp",
                         "expire_after": 60
                     }
                     discovery_message = ujson.dumps(discovery_payload)
-                    mqtt_client.publish(discovery_topic, discovery_message)
+                    mqtt_client.publish(discovery_topic, discovery_message.encode("utf-8")) # must encode in UTF-8 for it to work
                     mqtt_client.publish(f"homeassistant/sensor/tnas_pin{key}/temp", str(temp))
-                    print(f"Published tnas_pin{key} temp: {temp}C")
+                    print(f"Published tnas_pin{key} temp: {temp}°C")
 
                 gc.collect()
                 await uasyncio.sleep(0.8)
@@ -235,7 +236,7 @@ async def mqtt_publish():
         await uasyncio.sleep(30)
 # endregion
 
-# region pwm read
+# region rpm read
 def rpm_interrupt(pin):
     global pulse_count
     pulse_count += 1  # Count each falling edge

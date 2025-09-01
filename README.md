@@ -64,7 +64,7 @@ Assemble the project on a breadboard without soldering according to parts list a
 ## Solder everything and install it into casing
 Solder everything together and test. Install fully working controller into a casing. Install it into pc and connect temperature sensors to hdds or whatever it is you want to monitor. Connect PWM fan that should react to temperature changes. 
 ## (Optional) Monitor PWM Fan Duty, Fan RPM and temperature sensor readings in Home Assistant
-Home Assistant should be able to autodiscover the sensors, and you can add then to a dashboard. In my case I currently only have two HDDs that I monitor with pins 33 and 39, the rest of the sensors just lie on the bottom of pc case. Also RPM readings worked initially but stopped working after a while, not quite sure why. Maybe because RPM pin requires 3.3V logic, but my fan uses 5V logic and I haven't used any step-down current converter.
+Home Assistant should be able to autodiscover the sensors, and you can add then to a dashboard. In my case I currently only have two HDDs that I monitor with pins 33 and 39, the rest of the sensors just lie on the bottom of pc case. Also RPM readings worked initially but stopped working after a while, not quite sure why.
 
 [<img src="images/homeassistant.png" width="400"/>](images/homeassistant.png)
 
@@ -82,5 +82,3 @@ Ctrl-C to interrupt printout of temperature readings
 <pre>import machine</pre>
 
 <pre>machine.reset()</pre>
-
-
